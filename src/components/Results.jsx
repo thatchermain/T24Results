@@ -16,49 +16,53 @@ const Results = () => {
   return (
     <div className='container'>
       <>
-        <h1>RESULTS</h1>
-        <button onClick={results}>Fetch</button>
-        <br />
-        <div className='wrapper'>
-          <table className='table' border={0}>
-            <tr className='table__row'>
-              <th className='table__row table__row__head'>Imię i nazwisko</th>
-              <th className='table__row table__row__head'>Region</th>
-              <th className='table__row table__row__head'>Odpowiedzi</th>
-              <th className='table__row table__row__head'>Poprawne</th>
-              <th className='table__row table__row__head'>Błęde</th>
-              <th className='table__row table__row__head'>Wynik</th>
-            </tr>
-            <tbody className='table__body'>
-              {data
-                ? data.map((item) => {
-                    return (
-                      <tr className='table__body table__body__row'>
-                        <td className='table__body__row table__body__row__data'>
-                          {item.user}
-                        </td>
-                        <td className='table__body__row table__body__row__data'>
-                          {item.region}
-                        </td>
-                        <td className='table__body__row table__body__row__data'>
-                          {item.numberOfQuestionsAnswered}
-                        </td>
-                        <td className='table__body__row table__body__row__data'>
-                          {item.correctAnswer}
-                        </td>
-                        <td className='table__body__row table__body__row__data'>
-                          {item.wrongAnswer}
-                        </td>
-                        <td className='table__body__row table__body__row__data'>
-                          {item.score + ' %'}
-                        </td>
-                      </tr>
-                    );
-                  })
-                : 'Loading'}
-            </tbody>
-          </table>
+        <div className='header'>
+          <h1>Wyniki</h1>
+          <button className='button' onClick={results}>
+            Pobierz wyniki
+          </button>
         </div>
+        <br />
+        {data &&
+          data.map((item) => (
+            <div className='wrapper'>
+              <table className='table' border={0}>
+                <tr className='table__row'>
+                  <th className='table__row table__row__head'>
+                    Imię i nazwisko
+                  </th>
+                  <th className='table__row table__row__head'>Region</th>
+                  <th className='table__row table__row__head'>Odpowiedzi</th>
+                  <th className='table__row table__row__head'>Poprawne</th>
+                  <th className='table__row table__row__head'>Błęde</th>
+                  <th className='table__row table__row__head'>Wynik</th>
+                </tr>
+                <br></br>
+                <tbody className='table__body'>
+                  <tr className='table__body table__body__row'>
+                    <td className='table__body__row table__body__row__data'>
+                      {item.user}
+                    </td>
+                    <td className='table__body__row table__body__row__data'>
+                      {item.region}
+                    </td>
+                    <td className='table__body__row table__body__row__data'>
+                      {item.numberOfQuestionsAnswered}
+                    </td>
+                    <td className='table__body__row table__body__row__data'>
+                      {item.correctAnswer}
+                    </td>
+                    <td className='table__body__row table__body__row__data'>
+                      {item.wrongAnswer}
+                    </td>
+                    <td className='table__body__row table__body__row__data'>
+                      {item.score + ' %'}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ))}
       </>
     </div>
   );
