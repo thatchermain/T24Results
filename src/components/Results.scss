@@ -27,12 +27,15 @@
   font-size: 20px;
   border-radius: 30px;
   background-color: #fff;
+  padding: 0 1rem;
+  margin: 0 1rem;
   cursor: pointer;
   &:hover {
     background-color: #e0dfdf;
   }
 }
 .table {
+  text-align-last: left;
   border: 0 !important;
   border-spacing: 0 !important;
   width: 100%;
@@ -52,9 +55,11 @@
   &__body {
     &__row {
       padding: 1rem;
+      // border-top: 1px solid black;
+      border-bottom: 1px solid black;
     }
     &:nth-child(odd) {
-      background-color: #c9c9c9;
+      background-color: #d9d9d9;
     }
     &:nth-child(even) {
       background-color: #e9e9e9;
