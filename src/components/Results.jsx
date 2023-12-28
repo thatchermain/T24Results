@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Results.scss';
 
 const Results = () => {
   const [data, setData] = useState();
   const [search, setSearch] = useState('');
+  const [filterOptions, setFilterOptions] = useState([]);
+  const [showOptions, setShowOptions] = useState(false);
+  const [showFilter, setShowFilter] = useState(true);
 
   const results = async () => {
     const res = await fetch(
@@ -11,15 +14,22 @@ const Results = () => {
     );
     const fetchedData = await res.json(res);
     await setData(fetchedData);
-    console.log(fetchedData);
-    console.log(regions);
+    setShowOptions(true);
+    // console.log(fetchedData);
+    // console.log(regions);
   };
 
-  let regions = [];
-  data &&
-    data.map((item) => {
-      regions.push(item.region);
-    });
+  const setFilters = () => {
+    let regions = [];
+    data &&
+      data.map((item) => {
+        regions.push(item.region);
+      });
+    let filteredRegions = [...new Set(regions)];
+    setFilterOptions(filteredRegions);
+    // setFilterOptions([...new Set(regions)]);
+    setShowFilter(!showFilter);
+  };
 
   return (
     <div className='container'>
@@ -29,22 +39,32 @@ const Results = () => {
           <button className='button' onClick={results}>
             Pobierz wyniki
           </button>
-          {data && (
-            <select
-              className='button'
-              type='select'
-              placeholder='Search'
-              onChange={(e) => setSearch(e.target.value)}
-            >
-              <option value=''>Wybierz region</option>
-              {regions.map((region, index) => {
-                return (
-                  <option key={index} value={region.toLowerCase()}>
-                    {region}
-                  </option>
-                );
-              })}
-            </select>
+          {showOptions && showFilter ? (
+            <>
+              <button className='button' onClick={setFilters}>
+                Wybierz Region
+              </button>
+            </>
+          ) : (
+            <>
+              {data && (
+                <select
+                  className='button'
+                  type='select'
+                  placeholder='Search'
+                  onChange={(e) => setSearch(e.target.value)}
+                >
+                  <option value=''>Wybierz region</option>
+                  {filterOptions.map((filter, index) => {
+                    return (
+                      <option key={index} value={filter.toLowerCase()}>
+                        {filter}
+                      </option>
+                    );
+                  })}
+                </select>
+              )}
+            </>
           )}
         </div>
         <br />
@@ -55,7 +75,7 @@ const Results = () => {
               <th className='table__row table__row__head'>Region</th>
               <th className='table__row table__row__head'>Odpowiedzi</th>
               <th className='table__row table__row__head'>Poprawne</th>
-              <th className='table__row table__row__head'>Błęde</th>
+              <th className='table__row table__row__head'>Błędne</th>
               <th className='table__row table__row__head'>Wynik</th>
             </tr>
             <br></br>
