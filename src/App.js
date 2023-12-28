@@ -1,5 +1,5 @@
 import './App.css';
-import Results from './components/Results';
+import Results from './components/Results.jsx';
 
 function App() {
   return (
