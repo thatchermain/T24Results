@@ -7,6 +7,7 @@ const Results = () => {
   const [filterOptions, setFilterOptions] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
+  const [points, setPoints] = useState();
 
   const results = async () => {
     const res = await fetch(
@@ -14,7 +15,11 @@ const Results = () => {
     );
     const fetchedData = await res.json(res);
     await setData(fetchedData);
+    await console.log(fetchedData);
     setShowOptions(true);
+    // await data.allQuestions.filter((question) => question.isCorrect).lenght
+
+    console.log('Points ', points);
     // console.log(fetchedData);
     // console.log(regions);
   };
@@ -29,7 +34,19 @@ const Results = () => {
     setFilterOptions(filteredRegions);
     // setFilterOptions([...new Set(regions)]);
     setShowFilter(!showFilter);
+    // const correctAnswersCount = data.allQuestions.filter(
+    //   (question) => question.isCorrect
+    // ).length;
+    // setPoints(correctAnswersCount);
   };
+
+  // const countPoints = () => {
+  //   const correctAnswers = data.allQuestions.filter(
+  //     (question) => question.isCorrect
+  //   );
+  //   const numberOfCorrectAnswers = correctAnswers.lenght;
+  //   console.log('Points ', numberOfCorrectAnswers);
+  // };
 
   return (
     <div className='container'>
@@ -90,17 +107,9 @@ const Results = () => {
                     <div className='wrapped'>
                       <div>{item.user}</div>
                       <div>{item.region}</div>
+                      <div></div>
                       <div className='scores'>
-                        <div className='questions'>
-                          {item.allQuestions.map((question) => {
-                            return (
-                              <div className='bordered'>
-                                <p>{question.questionText}</p>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className='questions'>
+                        {/* <div className='questions'>
                           {item.allQuestions.map((question) => {
                             return (
                               <div className='bordered'>
@@ -117,9 +126,9 @@ const Results = () => {
                               </div>
                             );
                           })}
-                        </div>
+                        </div> */}
                         <div className='questions'>
-                          Wynik końcowy <h1>do zrobienia</h1>
+                          <p>{`Wynik końcowy: ${item.score} pkt `}</p>
                         </div>
                       </div>
                     </div>
