@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import Papa from 'papaparse';
 import './Results.scss';
 
 const Results = () => {
   const [data, setData] = useState();
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(false);
   const [filterOptions, setFilterOptions] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
   const [points, setPoints] = useState();
 
   const results = async () => {
+    setLoading(true);
     const res = await fetch(
       'https://basic-express-server-qlme.onrender.com/getResults'
     );
@@ -18,7 +21,6 @@ const Results = () => {
     await console.log(fetchedData);
     setShowOptions(true);
     // await data.allQuestions.filter((question) => question.isCorrect).lenght
-
     console.log('Points ', points);
     // console.log(fetchedData);
     // console.log(regions);
@@ -32,21 +34,46 @@ const Results = () => {
       });
     let filteredRegions = [...new Set(regions)];
     setFilterOptions(filteredRegions);
-    // setFilterOptions([...new Set(regions)]);
-    setShowFilter(!showFilter);
-    // const correctAnswersCount = data.allQuestions.filter(
-    //   (question) => question.isCorrect
-    // ).length;
-    // setPoints(correctAnswersCount);
+
+    // setShowFilter(!showFilter);
   };
 
-  // const countPoints = () => {
-  //   const correctAnswers = data.allQuestions.filter(
-  //     (question) => question.isCorrect
-  //   );
-  //   const numberOfCorrectAnswers = correctAnswers.lenght;
-  //   console.log('Points ', numberOfCorrectAnswers);
-  // };
+  const csvHandler = () => {
+    const flattebedData = data && data.map((item) => flattenObject(item));
+    const csv = Papa.unparse(flattebedData);
+
+    //////////////////////////
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'data.csv';
+
+    document.body.appendChild(downloadLink);
+
+    downloadLink.click();
+
+    document.body.removeChild(downloadLink);
+
+    //////////////////////////
+
+    console.log('first');
+    console.log(csv);
+  };
+
+  const flattenObject = (obj, prefix = '') => {
+    const flattened = {};
+
+    for (const key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        const nested = flattenObject(obj[key], `${prefix}${key}.`);
+        Object.assign(flattened, nested);
+      } else {
+        flattened[`${prefix}${key}`] = obj[key];
+      }
+    }
+
+    return flattened;
+  };
 
   return (
     <div className='container'>
@@ -58,9 +85,12 @@ const Results = () => {
           </button>
           {showOptions && showFilter ? (
             <>
-              <button className='button' onClick={setFilters}>
-                Wybierz Region
+              <button className='button' onClick={csvHandler}>
+                Pobierz jako CSV
               </button>
+              {/* <button className='button' onClick={setFilters}>
+                Wybierz Region
+              </button> */}
             </>
           ) : (
             <>
@@ -94,47 +124,35 @@ const Results = () => {
         <br />
         <br />
         <div className='wrapper'>
-          {data &&
-            data
-              .filter((entry) => {
-                return search.toLocaleLowerCase() === ''
-                  ? entry
-                  : entry.region.toLocaleLowerCase().includes(search);
-              })
-              .map((item, id) => {
-                return (
-                  <>
-                    <div className='wrapped'>
-                      <div>{item.user}</div>
-                      <div>{item.region}</div>
-                      <div></div>
-                      <div className='scores'>
-                        {/* <div className='questions'>
-                          {item.allQuestions.map((question) => {
-                            return (
-                              <div className='bordered'>
-                                <p>{question.answerText}</p>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className='questions'>
-                          {item.allQuestions.map((question) => {
-                            return (
-                              <div className='bordered'>
-                                <p>{question.isCorrect ? 'TAK' : 'NIE'}</p>
-                              </div>
-                            );
-                          })}
-                        </div> */}
-                        <div className='questions'>
-                          <p>{`Wynik końcowy: ${item.score} pkt `}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
+          {loading ? (
+            !data ? (
+              <>loading</>
+            ) : (
+              <>
+                {data
+                  .filter((entry) => {
+                    return search.toLocaleLowerCase() === ''
+                      ? entry
+                      : entry.region.toLocaleLowerCase().includes(search);
+                  })
+                  .map((item, id) => {
+                    return (
+                      <>
+                        {
+                          <div className='wrapped'>
+                            <div>{item.user}</div>
+                            <div>{item.region}</div>
+                            <div>{`Wynik końcowy: ${item.score} pkt `}</div>
+                          </div>
+                        }
+                      </>
+                    );
+                  })}
+              </>
+            )
+          ) : (
+            ''
+          )}
         </div>
       </>
     </div>
