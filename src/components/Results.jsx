@@ -9,7 +9,8 @@ const Results = () => {
   const [filterOptions, setFilterOptions] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
-  const [points, setPoints] = useState();
+  // const [points, setPoints] = useState();
+  const [finalScore, setFinalScore] = useState(0);
 
   const results = async () => {
     setLoading(true);
@@ -20,10 +21,6 @@ const Results = () => {
     await setData(fetchedData);
     await console.log(fetchedData);
     setShowOptions(true);
-    // await data.allQuestions.filter((question) => question.isCorrect).lenght
-    console.log('Points ', points);
-    // console.log(fetchedData);
-    // console.log(regions);
   };
 
   const setFilters = () => {
@@ -114,14 +111,7 @@ const Results = () => {
             </>
           )}
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+
         <br />
         <div className='wrapper'>
           {loading ? (
@@ -129,25 +119,33 @@ const Results = () => {
               <>loading</>
             ) : (
               <>
-                {data
-                  .filter((entry) => {
-                    return search.toLocaleLowerCase() === ''
-                      ? entry
-                      : entry.region.toLocaleLowerCase().includes(search);
-                  })
-                  .map((item, id) => {
-                    return (
-                      <>
-                        {
-                          <div className='wrapped'>
-                            <div>{item.user}</div>
-                            <div>{item.region}</div>
-                            <div>{`Wynik końcowy: ${item.score} pkt `}</div>
-                          </div>
-                        }
-                      </>
-                    );
-                  })}
+                <table>
+                  <tr className='table__head'>
+                    <th>Użytkownik</th>
+                    <th>Region</th>
+                    <th>Odp. prawidłowe</th>
+                    <th>Wynik</th>
+                  </tr>
+                  <tr></tr>
+                  <tr></tr>
+                  <tr></tr>
+                  {data
+                    .filter((entry) => {
+                      return search.toLocaleLowerCase() === ''
+                        ? entry
+                        : entry.region.toLocaleLowerCase().includes(search);
+                    })
+                    .map((item, id) => {
+                      return (
+                        <tr className='table__data'>
+                          <td>{item.user}</td>
+                          <td>{item.region}</td>
+                          <td>{item.score}</td>
+                          <td>{item.procentage} %</td>
+                        </tr>
+                      );
+                    })}
+                </table>
               </>
             )
           ) : (

@@ -21,6 +21,7 @@
   flex-direction: column;
   width: 90%;
   gap: 3rem;
+  padding-top: 150px;
   // position: relative;
   // top: 150%;
   // justify-content: space-between;
@@ -67,7 +68,7 @@
   &__body {
     &__row {
       padding: 1rem;
-      // border-top: 1px solid black;
+      border-top: 1px solid black;
       border-bottom: 1px solid black;
     }
   }
@@ -93,4 +94,16 @@
   &:nth-child(even) {
     background-color: #e9e9e9;
   }
+}
+.table__head {
+  background-color: #000000;
+  color: #eee;
+}
+.table__data {
+  &:nth-child(odd) {
+    background-color: #dfdfdf;
+  }
+  &:nth-child(even) {
+  }
+  background-color: #efefee;
 }
