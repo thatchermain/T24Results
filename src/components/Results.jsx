@@ -53,8 +53,8 @@ const Results = () => {
 
     //////////////////////////
 
-    console.log('first');
-    console.log(csv);
+    // console.log('first');
+    // console.log(csv);
   };
 
   const flattenObject = (obj, prefix = '') => {
