@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import './Results.scss';
+import { Parser } from '@json2csv/plainjs';
 
 const Results = () => {
   const [data, setData] = useState();
@@ -19,7 +20,7 @@ const Results = () => {
     );
     const fetchedData = await res.json(res);
     await setData(fetchedData);
-    await console.log(fetchedData);
+    // await console.log(fetchedData);
     setShowOptions(true);
   };
 
@@ -57,6 +58,27 @@ const Results = () => {
     // console.log(csv);
   };
 
+  const csvHandler2 = () => {
+    try {
+      const flattebedData = data && data.map((item) => flattenObject(item));
+      const parser = new Parser();
+      const csv = parser.parse(flattebedData);
+      // console.log(csv);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = 'data.csv';
+
+      document.body.appendChild(downloadLink);
+
+      downloadLink.click();
+
+      document.body.removeChild(downloadLink);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const flattenObject = (obj, prefix = '') => {
     const flattened = {};
 
@@ -82,9 +104,12 @@ const Results = () => {
           </button>
           {showOptions && showFilter ? (
             <>
-              <button className='button' onClick={csvHandler}>
+              <button className='button' onClick={csvHandler2}>
                 Pobierz jako CSV
               </button>
+              {/* <button className='button' onClick={csvHandler2}>
+                Pobierz jako CSV 2
+              </button> */}
               {/* <button className='button' onClick={setFilters}>
                 Wybierz Region
               </button> */}
